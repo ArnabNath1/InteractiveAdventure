@@ -1,0 +1,29 @@
+services:
+  # Backend API Service
+  - type: web
+    name: adventure-backend
+    env: python
+    buildCommand: cd backend && pip install -r requirements.txt
+    startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: DATABASE_PATH
+        value: databse.db
+      - key: API_PREFIX
+        value: /api
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_ORIGINS
+        sync: false
+
+  # Frontend Static Site
+  - type: web
+    name: adventure-frontend
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: ./frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        sync: false
+
